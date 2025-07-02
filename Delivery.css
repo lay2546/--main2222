@@ -1,0 +1,531 @@
+/* 🌟 แถบด้านบน (Top Bar) */
+.top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #ec4899;
+    color: white;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 50;
+}
+
+.top-bar-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* 🌟 ปุ่มเปิด Sidebar */
+.menu-button {
+    font-size: 1.5rem;
+    background: none;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+/* 🌟 Overlay */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.overlay.show {
+    opacity: 1;
+}
+
+/* 🌟 Sidebar */
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 308px;
+    background: white;
+    box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1);
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    border-radius: 2rem 0 0 2rem;
+    padding: 1.25rem;
+    z-index: 100;
+}
+
+.sidebar.show {
+    transform: translateX(0);
+}
+
+/* 🌟 Header Sidebar */
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.close-button {
+    font-size: 1.5rem;
+    color: #555;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* 🌟 Sidebar Navigation */
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 10px;
+}
+
+.nav-link {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.nav-link:hover {
+    background: #ec4899;
+    color: white;
+    transform: translateX(5px);
+}
+
+/* 🌟 Dropdown Menu */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-btn {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    padding: 10px 15px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    transition: background 0.3s ease-in-out;
+}
+
+.dropdown-btn:hover {
+    background: #ec4899;
+    color: white;
+}
+
+/* 🌟 Dropdown Content */
+.dropdown-content {
+    background: #f9fafb;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.dropdown-content.show {
+    max-height: 200px;
+    opacity: 1;
+}
+
+/* 🌟 ลิงก์ใน Dropdown */
+.dropdown-link {
+    display: block;
+    padding: 10px 15px;
+    color: #333;
+    text-decoration: none;
+    transition: background 0.3s ease-in-out;
+}
+
+.dropdown-link:hover {
+    background: #ec4899;
+    color: white;
+}
+
+/* 🌟 ปุ่ม Login / Logout */
+.login-button, .logout-button {
+    width: 100%;
+    background: #4caf50;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+    border: none;
+    margin-top: 10px;
+}
+
+.logout-button {
+    background: #d9534f;
+}
+
+.login-button:hover {
+    background: #388e3c;
+}
+
+.logout-button:hover {
+    background: #c9302c;
+}
+
+/* 🌟 Modal Popup */
+.modal {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 200;
+}
+
+.modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+    width: 350px;
+}
+
+/* ปุ่มปิด Modal */
+.close-modal {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    font-size: 1.5rem;
+    background: white;
+    border: 2px solid #ec4899;
+    color: #ec4899;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.close-modal:hover {
+    background: #ec4899;
+    color: white;
+}
+
+/* 🌟 สไตล์ของ Input */
+.modal-input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+/* 🌟 ปุ่ม Login */
+.modal-button {
+    width: 100%;
+    background: #4caf50;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+    border: none;
+}
+
+.modal-button:hover {
+    background: #388e3c;
+}
+
+/* 🌟 ซ่อน Modal */
+.hidden {
+    display: none;
+}
+
+/* 🌟 Responsive Grid */
+@media (max-width: 1024px) {
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .product-grid {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+/* 🌟 การตั้งค่าพื้นฐานของ Container */
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* 🌟 Grid Layout สำหรับการ์ดกิจกรรม */
+.activity-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    justify-content: center;
+}
+
+/* 🌟 การ์ดกิจกรรม */
+.activity.card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.activity.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* 🌟 รูปภาพในการ์ด */
+.card-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+/* 🌟 ส่วนเนื้อหาในการ์ด */
+.card-body {
+    padding: 15px;
+    text-align: center;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.card-description {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+/* 🌟 Responsive: เมื่อหน้าจอเล็กกว่า 768px */
+@media (max-width: 768px) {
+    .activity-grid {
+        grid-template-columns: 1fr;
+    }
+}
+.activities {
+    margin-top: 100px; /* ปรับค่าตามที่ต้องการ */
+}
+/* 🌟 ตั้งค่าพื้นฐาน */
+.product-section {
+    max-width: 1200px;
+    margin: auto;
+    padding: 40px 20px;
+}
+
+/* 🌟 Grid Layout สำหรับสินค้า */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    justify-content: center;
+}
+
+/* 🌟 การ์ดสินค้า */
+.product-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    text-align: center;
+    padding: 15px;
+}
+
+.product-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9fafb;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 600px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+    text-align: center;
+    font-size: 24px;
+    color: #ec4899;
+    margin-bottom: 15px;
+}
+
+.description {
+    text-align: center;
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.address-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.address-section li {
+    background: #fff4f7;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.order-section h2 {
+    color: #d97706;
+    margin-top: 10px;
+}
+
+.delivery-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.delivery-form label {
+    font-weight: bold;
+    color: #333;
+}
+
+.delivery-form input, .delivery-form textarea, .delivery-form select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.submit-btn {
+    background: #ec4899;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.submit-btn:hover {
+    background: #d43575;
+}
+/* 🌟 สไตล์สำหรับหน้า Event */
+body {
+    font-family: 'Arial', sans-serif;
+    background: #f9fafb;
+    margin: 0;
+    padding: 0;
+}
+
+.event-container {
+    max-width: 900px;
+    margin: 120px auto 40px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.event-list {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    padding: 20px;
+}
+
+.event-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.event-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.event-title {
+    font-size: 1.6rem;
+    color: #ec4899;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+.event-date {
+    font-size: 1rem;
+    color: #555;
+    margin-top: 5px;
+}
+
+.event-description {
+    font-size: 1rem;
+    color: #333;
+    margin-top: 10px;
+    line-height: 1.6;
+}
+.logo-text {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-text::before {
+    content: "";
+    width: 40px;
+    height: 40px;
+    background-image: url('S__131055784-Photoroom.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
