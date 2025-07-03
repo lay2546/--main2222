@@ -49,11 +49,9 @@ function renderOrders() {
       `<li>${item.name} x${item.quantity || 1} - ฿${item.price}</li>`
     ).join("");
 
-    // คำนวณยอดรวมสินค้า
     const orderTotal = (data.cart || []).reduce((sum, item) =>
       sum + (item.quantity || 1) * parseFloat(item.price || 0), 0);
 
-    // ส่วนลด (ถ้ามี)
     const discountPercent = parseFloat(data.discountPercent || 0);
     const discountAmount = orderTotal * (discountPercent / 100);
     const finalTotal = orderTotal - discountAmount;
@@ -100,6 +98,7 @@ function renderOrders() {
         <button class="status-btn bg-yellow-400 text-white text-xs px-2 py-1 rounded" data-id="${docId}" data-status="preparing">🛠 เตรียมสินค้า</button>
         <button class="status-btn bg-blue-500 text-white text-xs px-2 py-1 rounded" data-id="${docId}" data-status="shipping">🚚 กำลังจัดส่ง</button>
         <button class="status-btn bg-green-600 text-white text-xs px-2 py-1 rounded" data-id="${docId}" data-status="delivered">✅ จัดส่งแล้ว</button>
+        <button class="delete-btn bg-red-600 text-white text-xs px-2 py-1 rounded" data-id="${docId}">🗑️ ลบ</button>
       </td>
     `;
 
@@ -152,7 +151,6 @@ window.verifySlip = function (url, expectedTotal, expectedName, docId, manual = 
     });
 
     const text = result.data.text;
-    const lines = text.split('\n').map(l => l.trim());
     const expected = Number(expectedTotal);
 
     let amountText = 'ไม่พบ';
@@ -202,35 +200,29 @@ window.verifySlip = function (url, expectedTotal, expectedName, docId, manual = 
 
 function formatThaiDateTime(date) {
   if (!date) return "-";
-  const options = {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false
-  };
-  return date.toLocaleString('th-TH', options);
+  return date.toLocaleString('th-TH', {
+    day: '2-digit', month: 'long', year: 'numeric',
+    hour: '2-digit', minute: '2-digit', hour12: false
+  });
 }
 
+// ✅ Event: เปลี่ยนสถานะ หรือ ลบแบบเดี่ยว
 tbody.addEventListener("click", async (e) => {
   const target = e.target;
-  // อัปเดตสถานะการจัดส่ง
+
   if (target.classList.contains("status-btn")) {
     const orderId = target.dataset.id;
     const newStatus = target.dataset.status;
     try {
       await updateDoc(doc(db, "orders", orderId), { deliveryStatus: newStatus });
       alert(`✅ เปลี่ยนสถานะเป็น "${newStatus}" แล้ว`);
-      renderOrders(); // อัปเดตตารางทันทีหลังเปลี่ยนสถานะ
+      renderOrders();
     } catch (err) {
-      console.error("❌ ไม่สามารถเปลี่ยนสถานะ:", err);
+      console.error("❌ เปลี่ยนสถานะไม่สำเร็จ:", err);
       alert("เกิดข้อผิดพลาดในการอัปเดตสถานะ");
     }
-    return;
   }
 
-  // ลบออเดอร์
   if (target.classList.contains("delete-btn")) {
     const id = target.dataset.id;
     if (confirm("คุณต้องการลบออเดอร์นี้ใช่หรือไม่?")) {
@@ -246,7 +238,34 @@ tbody.addEventListener("click", async (e) => {
   }
 });
 
-const filterButton = document.getElementById("filter-button");
-filterButton?.addEventListener("click", () => {
-  renderOrders(); // รีเฟรชตารางตามตัวกรอง
+// ✅ ค้นหาตามวันที่
+document.getElementById("filter-button")?.addEventListener("click", () => renderOrders());
+
+// ✅ เลือกทั้งหมด
+selectAllCheckbox?.addEventListener("change", (e) => {
+  const allCheckboxes = document.querySelectorAll(".select-order");
+  allCheckboxes.forEach(cb => cb.checked = e.target.checked);
+});
+
+// ✅ ลบออเดอร์หลายรายการ
+deleteSelectedBtn?.addEventListener("click", async () => {
+  const checkboxes = document.querySelectorAll(".select-order:checked");
+  if (checkboxes.length === 0) {
+    alert("⚠️ กรุณาเลือกออเดอร์ที่ต้องการลบก่อน");
+    return;
+  }
+
+  if (!confirm(`ลบ ${checkboxes.length} รายการใช่หรือไม่?`)) return;
+
+  try {
+    for (const checkbox of checkboxes) {
+      const id = checkbox.dataset.id;
+      await deleteDoc(doc(db, "orders", id));
+    }
+    alert("✅ ลบรายการที่เลือกเรียบร้อยแล้ว");
+    renderOrders();
+  } catch (err) {
+    console.error("❌ ลบไม่สำเร็จ:", err);
+    alert("เกิดข้อผิดพลาดในการลบ");
+  }
 });

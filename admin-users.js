@@ -24,7 +24,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         email: data.email || "-",
         phone: data.phone || "-",
         createdAt: formatDate(data.createdAt?.toDate?.())
-        // ไม่โหลด address กับ orderCount ทันที
       });
     }
 
@@ -63,12 +62,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         <td class="py-2 px-3" id="order-${user.id}" class="italic text-gray-400">⏳</td>
         <td class="py-2 px-3" id="address-${user.id}" class="italic text-gray-400">⏳</td>
         <td class="py-2 px-3 text-center">
-          <button class="delete-user bg-red-500 text-white px-2 py-1 rounded" data-id="${user.id}">🗑</button>
+          <button class="delete-user bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1 rounded shadow" data-id="${user.id}">🗑 ลบ</button>
         </td>
       `;
       userTableBody.appendChild(tr);
 
-      // โหลดที่อยู่และ order count แบบ async
       loadAddress(user.id).then(addr => {
         const td = document.getElementById(`address-${user.id}`);
         if (td) td.textContent = addr;
@@ -91,14 +89,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     renderTable(filtered);
   });
 
-  // 🗑 ลบผู้ใช้
+  // ✅ ลบผู้ใช้ พร้อม try-catch
   userTableBody.addEventListener("click", async (e) => {
-    if (e.target.classList.contains("delete-user")) {
-      const id = e.target.dataset.id;
-      if (confirm("คุณแน่ใจว่าต้องการลบผู้ใช้นี้?")) {
-        await deleteDoc(doc(db, "users", id));
-        alert("✅ ลบผู้ใช้แล้ว");
-        loadUsers();
+    const target = e.target;
+    if (target.classList.contains("delete-user")) {
+      const id = target.dataset.id;
+      const confirmDelete = confirm("⚠️ คุณแน่ใจว่าต้องการลบผู้ใช้นี้?");
+      if (confirmDelete) {
+        try {
+          await deleteDoc(doc(db, "users", id));
+          alert("✅ ลบผู้ใช้เรียบร้อยแล้ว");
+          loadUsers();
+        } catch (err) {
+          console.error("❌ เกิดข้อผิดพลาดในการลบ:", err);
+          alert("เกิดข้อผิดพลาดในการลบผู้ใช้นี้ กรุณาตรวจสอบสิทธิ์หรือสถานะเอกสาร");
+        }
       }
     }
   });
